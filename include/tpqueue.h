@@ -4,7 +4,7 @@
 
 template<typename T>
 class TPQueue {
-   private:
+private:
   struct Item {
     T data;
     Item* next;
@@ -97,7 +97,7 @@ void TPQueue<T>::print() const {
     temp = temp->next;
   }
   std::cout << std::endl;
- }
+}
 };
 
 struct SYM {
