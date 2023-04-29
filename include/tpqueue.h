@@ -10,14 +10,14 @@ class TPQueue {
     struct Item {
         T data;
         Item* next;
-        Item* prev;
+        Item* pred;
     };
     Item* head;
     Item* tail;
-    TPQueue::Item* createItem(const T&);
+    TPQueue::Item* create(const T&);
 
  public:
-    TPQueue() : head(nullptr), tail(nullptr) {}
+    TPQueue() : head(nullptr), tail(nullptr) { }
     ~TPQueue();
     void push(const T&);
     T pop();
@@ -25,11 +25,11 @@ class TPQueue {
 };
 
 template <typename T>
-typename TPQueue<T>::Item* TPQueue<T>::createItem(const T& data) {
+typename TPQueue<T>::Item* TPQueue<T>::create(const T& data) {
     Item* item = new Item;
     item->data = data;
     item->next = nullptr;
-    item->prev = nullptr;
+    item->pred = nullptr;
     return item;
 }
 
@@ -43,36 +43,36 @@ TPQueue<T>::~TPQueue() {
 template <typename T>
 void TPQueue<T>::push(const T& d) {
     if (head == nullptr) {
-        head = createItem(d);
+        head = create(d);
         tail = head;
     } else if (tail->data.prior >= d.prior) {
         if (tail->data.ch == d.ch) {
             tail->data = d;
         } else {
-            tail->next = createItem(d);
+            tail->next = create(d);
             tail->next->prev = tail;
             tail = tail->next;
         }
     } else if (head == tail) {
-        tail->prev = createItem(d);
+        tail->pred = create(d);
         head = tail->prev;
         head->next = tail;
     } else {
         Item* tmp = tail;
         while (tmp != head && tmp->data.prior < d.prior) {
-            tmp = tmp->prev;
+            tmp = tmp->pred;
         }
         if (tmp->data.prior > d.prior) {
             Item* cell = new Item;
             cell->next = tmp->next;
-            cell->prev = tmp;
+            cell->pred = tmp;
             cell->data = d;
-            tmp->next->prev = cell;
+            tmp->next->pred = cell;
             tmp->next = cell;
         }
         if (tmp == head && tmp->data.prior < d.prior) {
-            head->prev = createItem(d);
-            head = head->prev;
+            head->pred = createItem(d);
+            head = head->pred;
             head->next = tmp;
         }
     }
@@ -95,7 +95,7 @@ template <typename T>
 void TPQueue<T>::print() const {
     Item* temp = head;
     while (temp) {
-        std::cout << temp->data.ch << temp->data.prior << " ";
+        std::cout << temp->data.ch << " ";
         temp = temp->next;
     }
     std::cout << std::endl;
