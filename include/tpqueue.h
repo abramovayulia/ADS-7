@@ -22,7 +22,7 @@ class TPQueue {
     void push(const T&);
     T pop();
     void print() const;
-};
+ };
 
 template <typename T>
 typename TPQueue<T>::Item* TPQueue<T>::create(const T& data) {
@@ -43,25 +43,25 @@ TPQueue<T>::~TPQueue() {
 template <typename T>
 void TPQueue<T>::push(const T& d) {
     if (head == nullptr) {
-        head = create(d);
-        tail = head;
+       head = create(d);
+       tail = head;
     } else if (tail->data.prior >= d.prior) {
         if (tail->data.ch == d.ch) {
             tail->data = d;
         } else {
             tail->next = create(d);
-            tail->next->prev = tail;
+            tail->next->pred = tail;
             tail = tail->next;
         }
     } else if (head == tail) {
         tail->pred = create(d);
-        head = tail->prev;
+        head = tail->pred;
         head->next = tail;
     } else {
         Item* tmp = tail;
         while (tmp != head && tmp->data.prior < d.prior) {
-            tmp = tmp->pred;
-        }
+        tmp = tmp->pred;
+			  }
         if (tmp->data.prior > d.prior) {
             Item* cell = new Item;
             cell->next = tmp->next;
@@ -71,7 +71,7 @@ void TPQueue<T>::push(const T& d) {
             tmp->next = cell;
         }
         if (tmp == head && tmp->data.prior < d.prior) {
-            head->pred = createItem(d);
+            head->pred = create(d);
             head = head->pred;
             head->next = tmp;
         }
@@ -95,7 +95,7 @@ template <typename T>
 void TPQueue<T>::print() const {
     Item* temp = head;
     while (temp) {
-        std::cout << temp->data.ch << " ";
+        std::cout << temp->data << " ";
         temp = temp->next;
     }
     std::cout << std::endl;
@@ -104,5 +104,3 @@ void TPQueue<T>::print() const {
 struct SYM {
   char ch;
   int prior;
-
-#endif  // INCLUDE_TPQUEUE_H_
